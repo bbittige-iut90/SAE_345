@@ -41,15 +41,16 @@ CREATE TABLE IF NOT EXISTS jeux_video (
     FOREIGN KEY (console_id) REFERENCES console(id_console)
 );
 
-CREATE TABLE IF NOT EXISTS utilisateur (
-   id_utilisateur INT AUTO_INCREMENT,
-   login_utilisateur VARCHAR(255) NOT NULL,
-   email_utilisateur VARCHAR(255) NOT NULL,
-   nom_utilisateur VARCHAR(255),
-   mot_de_passe_utilisateur VARCHAR(255) NOT NULL,
-   role_utilisateur VARCHAR(255),
+CREATE TABLE utilisateur (
+    id_utilisateur INT NOT NULL AUTO_INCREMENT,
+    login VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(255) NOT NULL,
+    nom VARCHAR(255) NOT NULL,
+    est_actif TINYINT(1) NOT NULL DEFAULT 1,
 
-   PRIMARY KEY(id_utilisateur)
+  PRIMARY KEY (id_utilisateur)
 );
 
 CREATE TABLE IF NOT EXISTS etat (
@@ -88,6 +89,12 @@ CREATE TABLE IF NOT EXISTS ligne_panier (
     FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
     FOREIGN KEY (jeux_video_id) REFERENCES jeux_video(id_jeux_video)
 );
+
+INSERT INTO utilisateur(id_utilisateur, login, email, password, role, nom, est_actif) VALUES
+(1,'admin','admin@admin.fr','scrypt:32768:8:1$irSP6dJEjy1yXof2$56295be51bb989f467598b63ba6022405139656d6609df8a71768d42738995a21605c9acbac42058790d30fd3adaaec56df272d24bed8385e66229c81e71a4f4','ROLE_admin','admin',1),
+(2,'client','client@client.fr','scrypt:32768:8:1$iFP1d8bdBmhW6Sgc$7950bf6d2336d6c9387fb610ddaec958469d42003fdff6f8cf5a39cf37301195d2e5cad195e6f588b3644d2a9116fa1636eb400b0cb5537603035d9016c15910','ROLE_client','client',1),
+(3,'client2','client2@client2.fr','scrypt:32768:8:1$l3UTNxiLZGuBKGkg$ae3af0d19f0d16d4a495aa633a1cd31ac5ae18f98a06ace037c0f4fb228ed86a2b6abc64262316d0dac936eb72a67ae82cd4d4e4847ee0fb0b19686ee31194b3','ROLE_client','client2',1);
+
 
 INSERT INTO type_jeux_video (id_type_jeux_video,libelle_type_jeux_video) VALUES
 (NULL, 'Action'), (NULL,'Plateforme'),(NULL,'Tir'),

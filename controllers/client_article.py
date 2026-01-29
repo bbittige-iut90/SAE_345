@@ -37,6 +37,10 @@ def client_article_show():                                 # remplace client_ind
     mycursor.execute(sql)
     types_article = mycursor.fetchall()
 
+    sql = "SELECT id_console, libelle_console FROM console"
+    mycursor.execute(sql)
+    items_console = mycursor.fetchall()
+
     sql='''
     SELECT jeux_video.id_jeux_video, jeux_video.nom_jeux_video AS nom, jeux_video.prix_jeux_video AS prix, COUNT(ligne_panier.jeux_video_id) AS quantite, (jeux_video.prix_jeux_video * COUNT(ligne_panier.jeux_video_id)) as total_ligne
     FROM ligne_panier 
@@ -63,4 +67,5 @@ def client_article_show():                                 # remplace client_ind
                            , articles_panier=articles_panier
                            , prix_total=prix_total
                            , items_filtre=types_article
+                           , items_console=items_console
                            )

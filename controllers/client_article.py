@@ -14,28 +14,53 @@ def client_article_show():                                 # remplace client_ind
     mycursor = get_db().cursor()
     id_client = session['id_user']
 
-    sql = '''   selection des articles   '''
+    sql = ''' 
+    SELECT id_jeux_video, nom_jeux_video AS nom, prix_jeux_video AS prix, photo_jeux_video AS photo, stock, libelle_console, libelle_type_jeux_video
+    FROM jeux_video
+    JOIN console ON jeux_video.console_id = console.id_console
+    JOIN type_jeux_video ON jeux_video.type_jeux_video_id = type_jeux_video.id_type_jeux_video
+    '''
     list_param = []
     condition_and = ""
+
+    mycursor.execute(sql)
+    articles = mycursor.fetchall()
+
     # utilisation du filtre
     sql3=''' prise en compte des commentaires et des notes dans le SQL    '''
-    articles =[]
-
 
     # pour le filtre
-    types_article = []
+    sql = '''
+    SELECT id_type_jeux_video AS id_type_article, libelle_type_jeux_video AS libelle
+    FROM type_jeux_video
+    '''
+    mycursor.execute(sql)
+    types_article = mycursor.fetchall()
 
-
-    articles_panier = []
+    sql='''
+    SELECT jeux_video.id_jeux_video, jeux_video.nom_jeux_video AS nom, jeux_video.prix_jeux_video AS prix, COUNT(ligne_panier.jeux_video_id) AS quantite, (jeux_video.prix_jeux_video * COUNT(ligne_panier.jeux_video_id)) as total_ligne
+    FROM ligne_panier 
+    JOIN jeux_video ON ligne_panier.jeux_video_id = jeux_video.id_jeux_video 
+    WHERE ligne_panier.utilisateur_id = %s
+    GROUP BY jeux_video.id_jeux_video, jeux_video.nom_jeux_video, jeux_video.prix_jeux_video;
+    '''
+    mycursor.execute(sql,(id_client,))
+    articles_panier = mycursor.fetchall()
 
     if len(articles_panier) >= 1:
-        sql = ''' calcul du prix total du panier '''
-        prix_total = None
+        sql = '''
+        SELECT SUM(jeux_video.prix_jeux_video) AS total
+        FROM ligne_panier
+        JOIN jeux_video ON ligne_panier.jeux_video_id = jeux_video.id_jeux_video
+        WHERE ligne_panier.utilisateur_id = %s; '''
+        mycursor.execute(sql, (id_client,))
+        res = mycursor.fetchone()
+        prix_total = res['total']
     else:
         prix_total = None
     return render_template('client/boutique/panier_article.html'
                            , articles=articles
                            , articles_panier=articles_panier
-                           #, prix_total=prix_total
+                           , prix_total=prix_total
                            , items_filtre=types_article
                            )

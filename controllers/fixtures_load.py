@@ -155,14 +155,14 @@ def fct_fixtures_load():
     (NULL,'Animal Crossing: New Horizons','Simulation de capitalisme sur une île',45,'acnh.jpg',13,'neuf','3','Nintendo',8,3),
     (NULL,'The Legend of Zelda: Breath of the Wild','Une mystérieuse voix vous guide afin d''éliminer Ganon, «Le Fléau»',25,'zelda_botw.jpg',2,'occasion','12','occasion',5,3),
     -- WII U
-    (NULL,'Splatoon','Guerre de peinture en solo ou en ligne',20,'splaton.jpg',4,'neuf','7','Nintendo',3,4),
+    (NULL,'Splatoon','Guerre de peinture en solo ou en ligne',20,'splatoon.jpg',4,'neuf','7','Nintendo',3,4),
     (NULL,'Call of Duty Black Ops 2','Vivez la fin de la guerre froide',10,'cod_bo2_wiiu.jpg',2,'occasion','18','Treyarch',3,4),
     (NULL,'New Super Mario Bros U','Sauvez la princesse sur Wii U',40,'nsmbu.jpg',1,'occasion','3','Nintendo',2,4),
     (NULL,'Super Smash Bros for Wii U','Jeux de combat à la sauce Nintendo',40,'smash_bros_wiiu.jpg',2,'occasion','12','Nintendo',1,4),
     -- 3DS
     (NULL,'Yo-Kai Watch 3','Vivez les aventures de Nathan aux États-Unis',200,'ykw3.jpg',1,'occasion','7','Level-5',6,5),
-    (NULL,'Yo-Kai Watch 2','Vivez la suite des aventures de Nathan à Grandval',40,'pkmn_soleil.jpg',2,'occasion','7','Level-5',6,5),
-    (NULL,'Pokemon Soleil','Explorez la région d''Alola et attrapez les tous',50,'ykw2.jpg',2,'occasion','7','Nintendo',6,5),
+    (NULL,'Yo-Kai Watch 2','Vivez la suite des aventures de Nathan à Grandval',40,'ykw2.jpg',2,'occasion','7','Level-5',6,5),
+    (NULL,'Pokemon Soleil','Explorez la région d''Alola et attrapez les tous',50,'pkmn_soleil.jpg',2,'occasion','7','Nintendo',6,5),
     (NULL,'One Piece: Unlimited Cruise SP','Revivez le voyage des Mugiwaras sur GrandLine',100,'opucsp.jpg',1,'occasion','12','Bandai Namco',4,5),
     -- WII
     (NULL,'Wii Sports Resort','La suite du Party Game le plus vendu de Nintendo',35,'wii_sports_resort.jpg',3,'occasion','7','Nintendo',11,6),

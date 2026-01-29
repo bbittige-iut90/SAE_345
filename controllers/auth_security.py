@@ -8,7 +8,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from connexion_db import get_db
 
 auth_security = Blueprint('auth_security', __name__,
-                        template_folder='templates')
+                          template_folder='templates')
+
 
 @auth_security.route('/login')
 def auth_login():
@@ -20,10 +21,10 @@ def auth_login_post():
     mycursor = get_db().cursor()
     login = request.form.get('login')
     password = request.form.get('password')
-    tuple_select = (login)
-    sql = (" SELECT * FROM utilisateur"
-           "    WHERE login = %s;")
-    retour = mycursor.execute(sql, tuple_select)
+    tuple_select = (login,)
+    sql = "SELECT * FROM utilisateur WHERE login = %s;"
+
+    mycursor.execute(sql, tuple_select)
     user = mycursor.fetchone()
     if user:
         mdp_ok = check_password_hash(user['password'], password)
@@ -34,7 +35,6 @@ def auth_login_post():
             session['login'] = user['login']
             session['role'] = user['role']
             session['id_user'] = user['id_utilisateur']
-            print(user['login'], user['role'])
             if user['role'] == 'ROLE_admin':
                 return redirect('/admin/commande/index')
             else:
@@ -42,6 +42,7 @@ def auth_login_post():
     else:
         flash(u'Vérifier votre login et essayer encore.', 'alert-warning')
         return redirect('/login')
+
 
 @auth_security.route('/signup')
 def auth_signup():
@@ -54,25 +55,24 @@ def auth_signup_post():
     email = request.form.get('email')
     login = request.form.get('login')
     password = request.form.get('password')
+    nom = request.form.get('nom')
+
     tuple_select = (login, email)
-    sql = "  SELECT * FROM utilisateur WHERE login=%s OR email=%s;  "
-    retour = mycursor.execute(sql, tuple_select)
+    sql = "SELECT * FROM utilisateur WHERE login=%s OR email=%s;"
+    mycursor.execute(sql, tuple_select)
     user = mycursor.fetchone()
     if user:
-        flash(u'votre adresse Email ou  votre Login existe déjà', 'alert-warning')
+        flash(u'votre adresse Email ou votre Login existe déjà', 'alert-warning')
         return redirect('/signup')
 
-    # ajouter un nouveau user
     password = generate_password_hash(password, method='pbkdf2:sha256')
-    tuple_insert = (login, email, password, 'ROLE_client')
-    sql = """  INSERT INTO utilisateur (login,email,password,role) VALUES (%s, %s, %s, %s);  """
+    tuple_insert = (login, email, password, 'ROLE_client', nom)
+    sql = "INSERT INTO utilisateur (login, email, password, role, nom) VALUES (%s, %s, %s, %s, %s);"
     mycursor.execute(sql, tuple_insert)
     get_db().commit()
-    sql = "  SELECT LAST_INSERT_ID() AS last_insert_id;  "
-    mycursor.execute(sql)
-    info_last_id = mycursor.fetchone()
-    id_user = info_last_id['last_insert_id']
-    print('last_insert_id', id_user)
+
+    id_user = mycursor.lastrowid
+
     session.pop('login', None)
     session.pop('role', None)
     session.pop('id_user', None)

@@ -11,15 +11,14 @@ fixtures_load = Blueprint('fixtures_load', __name__,
 @fixtures_load.route('/base/init')
 def fct_fixtures_load():
     mycursor = get_db().cursor()
-    mycursor.execute('''
-    DROP TABLE IF EXISTS ligne_commande;
-    DROP TABLE IF EXISTS ligne_panier;
-    DROP TABLE IF EXISTS commande;
-    DROP TABLE IF EXISTS jeux_video;
-    DROP TABLE IF EXISTS utilisateur;
-    DROP TABLE IF EXISTS etat;
-    DROP TABLE IF EXISTS type_jeux_video;
-    DROP TABLE IF EXISTS console;''')
+    mycursor.execute("DROP TABLE IF EXISTS ligne_commande;")
+    mycursor.execute("DROP TABLE IF EXISTS ligne_panier;")
+    mycursor.execute("DROP TABLE IF EXISTS commande;")
+    mycursor.execute("DROP TABLE IF EXISTS jeux_video;")
+    mycursor.execute("DROP TABLE IF EXISTS utilisateur;")
+    mycursor.execute("DROP TABLE IF EXISTS etat;")
+    mycursor.execute("DROP TABLE IF EXISTS type_jeux_video;")
+    mycursor.execute("DROP TABLE IF EXISTS console;")
 
     mycursor.execute('''
     CREATE TABLE IF NOT EXISTS type_jeux_video (

@@ -83,9 +83,6 @@ app.register_blueprint(admin_dataviz)
 app.register_blueprint(admin_commentaire)
 
 
-# test commit
-
-
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
 

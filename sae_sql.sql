@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS ligne_panier (
     utilisateur_id INT,
     jeux_video_id INT,
     quantite INT,
-    date_ajout DATE
+    date_ajout DATE,
 
     PRIMARY KEY (utilisateur_id, jeux_video_id),
     FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),

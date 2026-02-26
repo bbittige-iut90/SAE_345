@@ -83,15 +83,17 @@ CREATE TABLE IF NOT EXISTS ligne_commande (
 );
 
 CREATE TABLE IF NOT EXISTS ligne_panier (
+    id_ligne_panier INT AUTO_INCREMENT,
     utilisateur_id INT,
     jeux_video_id INT,
     quantite INT,
     date_ajout DATE,
 
-    PRIMARY KEY (utilisateur_id, jeux_video_id),
+    PRIMARY KEY (id_ligne_panier),
     FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
     FOREIGN KEY (jeux_video_id) REFERENCES jeux_video(id_jeux_video)
 );
+
 
 INSERT INTO utilisateur(id_utilisateur,login,email,password,role,nom,est_actif) VALUES
 (1,'admin','admin@admin.fr',

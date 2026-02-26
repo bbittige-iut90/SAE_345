@@ -26,13 +26,14 @@ def client_panier_add():
     # ... (code declinaison commenté car non supporté par le schéma actuel) ...
 
 # ajout dans le panier d'un article
-    sql = "SELECT * FROM ligne_panier WHERE jeux_video_id = %s AND utilisateur_id = %s"
+    sql = "SELECT * FROM ligne_panier WHERE jeux_video_id = %s AND utilisateur_id = %s;"
     mycursor.execute(sql, (id_article, id_client))
     article_panier = mycursor.fetchone()
 
     mycursor.execute("UPDATE jeux_video SET stock = stock - %s WHERE id_jeux_video = %s", (quantite, id_article))
 
-    if article_panier is not None and article_panier['quantite'] >= 1:
+    if article_panier is not None:
+        print("update quantite")
         mycursor.execute("UPDATE ligne_panier SET quantite = quantite + %s WHERE jeux_video_id = %s AND utilisateur_id = %s", (quantite, id_article, id_client))
     else:
         mycursor.execute("INSERT INTO ligne_panier (utilisateur_id, jeux_video_id, quantite, date_ajout) VALUES (%s, %s, %s, NOW())", (id_client, id_article, quantite))

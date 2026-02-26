@@ -68,18 +68,17 @@ def client_article_show():                                 # remplace client_ind
     items_console = mycursor.fetchall()
 
     sql='''
-    SELECT jeux_video.id_jeux_video, jeux_video.id_jeux_video AS id_article, jeux_video.nom_jeux_video AS nom, jeux_video.prix_jeux_video AS prix, COUNT(ligne_panier.jeux_video_id) AS quantite, (jeux_video.prix_jeux_video * COUNT(ligne_panier.jeux_video_id)) as total_ligne
+    SELECT jeux_video.id_jeux_video, jeux_video.id_jeux_video AS id_article, jeux_video.nom_jeux_video AS nom, jeux_video.prix_jeux_video AS prix, ligne_panier.quantite AS quantite, (jeux_video.prix_jeux_video * ligne_panier.quantite) as total_ligne
     FROM ligne_panier 
     JOIN jeux_video ON ligne_panier.jeux_video_id = jeux_video.id_jeux_video 
-    WHERE ligne_panier.utilisateur_id = %s
-    GROUP BY jeux_video.id_jeux_video, jeux_video.nom_jeux_video, jeux_video.prix_jeux_video;
+    WHERE ligne_panier.utilisateur_id = %s;
     '''
     mycursor.execute(sql,(id_client,))
     articles_panier = mycursor.fetchall()
 
     if len(articles_panier) >= 1:
         sql = '''
-        SELECT SUM(jeux_video.prix_jeux_video) AS total
+        SELECT SUM(jeux_video.prix_jeux_video * ligne_panier.quantite) AS total
         FROM ligne_panier
         JOIN jeux_video ON ligne_panier.jeux_video_id = jeux_video.id_jeux_video
         WHERE ligne_panier.utilisateur_id = %s; '''

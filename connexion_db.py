@@ -11,7 +11,7 @@ def get_db():
     if db is None:
         db = g._database = pymysql.connect(
             host=os.getenv("HOST"),                 # à modifier
-            user=os.getenv("USER"),                 # à modifier
+            user=os.getenv("DB_USER"),                 # à modifier
             password=os.getenv("PASSWORD"),         # à modifier
             database=os.getenv("DATABASE"),         # à modifier
             charset="utf8mb4",

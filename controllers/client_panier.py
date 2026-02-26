@@ -14,7 +14,21 @@ def client_panier_add():
     mycursor = get_db().cursor()
     id_client = session['id_user']
     id_article = request.form.get('id_article')
-    quantite = request.form.get('quantite')
+    quantite = int(request.form.get('quantite'))
+
+    # Récupérer les informations de l'article, notamment le stock
+    mycursor.execute("SELECT stock, nom_jeux_video FROM jeux_video WHERE id_jeux_video = %s", (id_article,))
+    article_db = mycursor.fetchone()
+
+    # Vérifier si l'article existe
+    if article_db is None:
+        flash("L'article que vous essayez d'ajouter n'existe pas.", "alert-danger")
+        return redirect('/client/article/show')
+
+    # Vérifier si le stock est suffisant
+    if article_db['stock'] < quantite:
+        flash(f"Le stock pour l'article '{article_db['nom_jeux_video']}' est insuffisant. Il ne reste que {article_db['stock']} exemplaire(s).", "alert-warning")
+        return redirect('/client/article/show')
     # ---------
     #id_declinaison_article=request.form.get('id_declinaison_article',None)
     # id_declinaison_article = 1
@@ -38,6 +52,7 @@ def client_panier_add():
     else:
         mycursor.execute("INSERT INTO ligne_panier (utilisateur_id, jeux_video_id, quantite, date_ajout) VALUES (%s, %s, %s, NOW())", (id_client, id_article, quantite))
     get_db().commit()
+    flash(f"L'article '{article_db['nom_jeux_video']}' a bien été ajouté au panier.", "alert-success")
 
     return redirect('/client/article/show')
 

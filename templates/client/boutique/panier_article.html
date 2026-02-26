@@ -7,16 +7,6 @@
               <h3>Les filtres</h3>
               Genre de jeux vidéo :<br>
                  {% include('client/boutique/_filtre.html') %}
-
-              <br>Plateforme (Console) :<br>
-              <form action="/client/article/show" method="get">
-                  <select name="filter_console" class="form-select" onchange="this.form.submit()">
-                      <option value="">Toutes les consoles</option>
-                      {% for console in items_console %}
-                          <option value="{{ console.id_console }}">{{ console.libelle_console }}</option>
-                      {% endfor %}
-                  </select>
-              </form>
             </div>
         </div>
 

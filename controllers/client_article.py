@@ -23,7 +23,33 @@ def client_article_show():                                 # remplace client_ind
     list_param = []
     condition_and = ""
 
-    mycursor.execute(sql)
+    if "filter_word" in session or "filter_prix_min" in session or "filter_prix_max" in session or "filter_types" in session:
+        sql = sql + " WHERE "
+    if 'filter_word' in session:
+        sql = sql + condition_and + " nom_jeux_video LIKE %s "
+        recherche = "%" + session['filter_word'] + "%"
+        list_param.append(recherche)
+        condition_and = " AND "
+    if 'filter_prix_min' in session:
+        sql = sql + condition_and + " prix_jeux_video >= %s "
+        list_param.append(session['filter_prix_min'])
+        condition_and = " AND "
+    if 'filter_prix_max' in session:
+        sql = sql + condition_and + " prix_jeux_video <= %s "
+        list_param.append(session['filter_prix_max'])
+        condition_and = " AND "
+    if 'filter_types' in session:
+        sql = sql + condition_and + "("
+        last_item = session['filter_types'][-1]
+        for item in session['filter_types']:
+            sql = sql + "type_jeux_video_id = %s "
+            if item != last_item:
+                sql = sql + " OR "
+            list_param.append(item)
+        sql = sql + ")"
+        condition_and = " AND "
+
+    mycursor.execute(sql, tuple(list_param))
     articles = mycursor.fetchall()
 
     # utilisation du filtre
@@ -42,7 +68,7 @@ def client_article_show():                                 # remplace client_ind
     items_console = mycursor.fetchall()
 
     sql='''
-    SELECT jeux_video.id_jeux_video, jeux_video.nom_jeux_video AS nom, jeux_video.prix_jeux_video AS prix, COUNT(ligne_panier.jeux_video_id) AS quantite, (jeux_video.prix_jeux_video * COUNT(ligne_panier.jeux_video_id)) as total_ligne
+    SELECT jeux_video.id_jeux_video, jeux_video.id_jeux_video AS id_article, jeux_video.nom_jeux_video AS nom, jeux_video.prix_jeux_video AS prix, COUNT(ligne_panier.jeux_video_id) AS quantite, (jeux_video.prix_jeux_video * COUNT(ligne_panier.jeux_video_id)) as total_ligne
     FROM ligne_panier 
     JOIN jeux_video ON ligne_panier.jeux_video_id = jeux_video.id_jeux_video 
     WHERE ligne_panier.utilisateur_id = %s

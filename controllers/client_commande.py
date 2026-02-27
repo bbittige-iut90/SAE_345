@@ -53,7 +53,6 @@ def client_commande_add():
     mycursor = get_db().cursor()
     id_client = session['id_user']
 
-    # 1. Récupérer les articles du panier
     sql_panier = """
         SELECT jv.id_jeux_video, jv.prix_jeux_video, lp.quantite
         FROM ligne_panier AS lp
@@ -67,17 +66,14 @@ def client_commande_add():
         flash("Votre panier est vide.", "alert-warning")
         return redirect('/client/article/show')
 
-    # 2. Créer la commande (état 1 = 'En cours de traitement')
     sql_create_commande = "INSERT INTO commande(date_commande, utilisateur_id, etat_id) VALUES (NOW(), %s, 1);"
     mycursor.execute(sql_create_commande, (id_client,))
     id_commande = mycursor.lastrowid
 
-    # 3. Insérer les lignes de commande
     for item in items_ligne_panier:
         sql_insert_ligne = "INSERT INTO ligne_commande(commande_id, jeux_video_id, prix, quantite) VALUES (%s, %s, %s, %s);"
         mycursor.execute(sql_insert_ligne, (id_commande, item['id_jeux_video'], item['prix_jeux_video'], item['quantite']))
 
-    # 4. Vider le panier
     sql_vider_panier = "DELETE FROM ligne_panier WHERE utilisateur_id = %s;"
     mycursor.execute(sql_vider_panier, (id_client,))
 

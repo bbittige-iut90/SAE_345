@@ -43,8 +43,8 @@ def admin_commande_show():
         WHERE commande_id = %s;
         '''
 
-    mycursor.execute(sql, (id_commande,))
-    articles_commande = mycursor.fetchall()
+        mycursor.execute(sql, (id_commande,))
+        articles_commande = mycursor.fetchall()
 
     return render_template('admin/commandes/show.html'
                            , commandes=commandes

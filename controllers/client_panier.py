@@ -16,16 +16,13 @@ def client_panier_add():
     id_article = request.form.get('id_article')
     quantite = int(request.form.get('quantite'))
 
-    # Récupérer les informations de l'article, notamment le stock
     mycursor.execute("SELECT stock, nom_jeux_video FROM jeux_video WHERE id_jeux_video = %s", (id_article,))
     article_db = mycursor.fetchone()
 
-    # Vérifier si l'article existe
     if article_db is None:
         flash("L'article que vous essayez d'ajouter n'existe pas.", "alert-danger")
         return redirect('/client/article/show')
 
-    # Vérifier si le stock est suffisant
     if article_db['stock'] < quantite:
         flash(f"Le stock pour l'article '{article_db['nom_jeux_video']}' est insuffisant. Il ne reste que {article_db['stock']} exemplaire(s).", "alert-warning")
         return redirect('/client/article/show')
@@ -37,7 +34,18 @@ def client_panier_add():
     # sql = '''    '''
     # mycursor.execute(sql, (id_article))
     # declinaisons = mycursor.fetchall()
-    # ... (code declinaison commenté car non supporté par le schéma actuel) ...
+    # if len(declinaisons) == 1:
+    #     id_declinaison_article = declinaisons[0]['id_declinaison_article']
+    # elif len(declinaisons) == 0:
+    #     abort("pb nb de declinaison")
+    # else:
+    #     sql = '''   '''
+    #     mycursor.execute(sql, (id_article))
+    #     article = mycursor.fetchone()
+    #     return render_template('client/boutique/declinaison_article.html'
+    #                                , declinaisons=declinaisons
+    #                                , quantite=quantite
+    #                                , article=article)
 
 # ajout dans le panier d'un article
     sql = "SELECT * FROM ligne_panier WHERE jeux_video_id = %s AND utilisateur_id = %s;"

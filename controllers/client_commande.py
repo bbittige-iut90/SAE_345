@@ -16,13 +16,10 @@ def client_commande_valide():
     id_client = session['id_user']
 
     sql = """
-        SELECT jv.nom_jeux_video AS nom,
-               lp.quantite,
-               jv.prix_jeux_video AS prix,
-               (lp.quantite * jv.prix_jeux_video) as prix_ligne
-        FROM ligne_panier AS lp
-        JOIN jeux_video AS jv ON lp.jeux_video_id = jv.id_jeux_video
-        WHERE lp.utilisateur_id = %s;
+    SELECT jv.nom_jeux_video AS nom,lp.quantite,jv.prix_jeux_video AS prix,(lp.quantite * jv.prix_jeux_video) as prix_ligne
+    FROM ligne_panier AS lp
+    JOIN jeux_video AS jv ON lp.jeux_video_id = jv.id_jeux_video
+    WHERE lp.utilisateur_id = %s;
     """
     mycursor.execute(sql, (id_client,))
     articles_panier = mycursor.fetchall()
@@ -32,10 +29,10 @@ def client_commande_valide():
         return redirect('/client/article/show')
 
     sql_prix_total = """
-        SELECT SUM(lp.quantite * jv.prix_jeux_video) as prix_total
-        FROM ligne_panier AS lp
-        JOIN jeux_video AS jv ON lp.jeux_video_id = jv.id_jeux_video
-        WHERE lp.utilisateur_id = %s;
+    SELECT SUM(lp.quantite * jv.prix_jeux_video) as prix_total
+    FROM ligne_panier AS lp
+    JOIN jeux_video AS jv ON lp.jeux_video_id = jv.id_jeux_video
+    WHERE lp.utilisateur_id = %s;
     """
     mycursor.execute(sql_prix_total, (id_client,))
     prix_total = mycursor.fetchone()['prix_total']
@@ -54,10 +51,10 @@ def client_commande_add():
     id_client = session['id_user']
 
     sql_panier = """
-        SELECT jv.id_jeux_video, jv.prix_jeux_video, lp.quantite
-        FROM ligne_panier AS lp
-        JOIN jeux_video AS jv ON lp.jeux_video_id = jv.id_jeux_video
-        WHERE lp.utilisateur_id = %s;
+    SELECT jv.id_jeux_video, jv.prix_jeux_video, lp.quantite
+    FROM ligne_panier AS lp
+    JOIN jeux_video AS jv ON lp.jeux_video_id = jv.id_jeux_video
+    WHERE lp.utilisateur_id = %s;
     """
     mycursor.execute(sql_panier, (id_client,))
     items_ligne_panier = mycursor.fetchall()
@@ -86,13 +83,13 @@ def client_commande_show():
     mycursor = get_db().cursor()
     id_client = session['id_user']
     sql = """
-        SELECT c.id_commande, c.date_commande AS date_achat, SUM(lc.quantite) AS nbr_articles, SUM(lc.prix * lc.quantite) AS prix_total, e.libelle_etat AS etat, c.etat_id
-        FROM commande AS c
-        JOIN ligne_commande AS lc ON c.id_commande = lc.commande_id
-        JOIN etat AS e ON c.etat_id = e.id_etat
-        WHERE c.utilisateur_id = %s
-        GROUP BY c.id_commande, date_achat, e.libelle_etat, c.etat_id
-        ORDER BY c.etat_id, c.date_commande DESC;
+    SELECT c.id_commande, c.date_commande AS date_achat, SUM(lc.quantite) AS nbr_articles, SUM(lc.prix * lc.quantite) AS prix_total, e.libelle_etat AS etat, c.etat_id
+    FROM commande AS c
+    JOIN ligne_commande AS lc ON c.id_commande = lc.commande_id
+    JOIN etat AS e ON c.etat_id = e.id_etat
+    WHERE c.utilisateur_id = %s
+    GROUP BY c.id_commande, date_achat, e.libelle_etat, c.etat_id
+    ORDER BY c.etat_id, c.date_commande DESC;
     """
     mycursor.execute(sql, (id_client,))
     commandes = mycursor.fetchall()
@@ -102,10 +99,10 @@ def client_commande_show():
     id_commande_show = request.args.get('id_commande', None)
     if id_commande_show:
         sql_articles = """
-            SELECT jv.nom_jeux_video AS nom, lc.quantite, lc.prix, (lc.prix * lc.quantite) AS prix_ligne
-            FROM ligne_commande AS lc
-            JOIN jeux_video AS jv ON lc.jeux_video_id = jv.id_jeux_video
-            WHERE lc.commande_id = %s;
+        SELECT jv.nom_jeux_video AS nom, lc.quantite, lc.prix, (lc.prix * lc.quantite) AS prix_ligne
+        FROM ligne_commande AS lc
+        JOIN jeux_video AS jv ON lc.jeux_video_id = jv.id_jeux_video
+        WHERE lc.commande_id = %s;
         """
         mycursor.execute(sql_articles, (id_commande_show,))
         articles_commande = mycursor.fetchall()

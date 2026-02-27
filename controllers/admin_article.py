@@ -33,6 +33,7 @@ def add_article():
 
 @admin_article.route('/admin/article/add', methods=['POST'])
 def valid_add_article():
+    mycursor = get_db().cursor()
     nom = request.form.get('nom', '')
     type_id = request.form.get('type_article_id', '')
     console_id = request.form.get('console_id', '')
@@ -41,15 +42,16 @@ def valid_add_article():
     description = request.form.get('description', '')
     photo = request.form.get('photo', '')
 
-    message = 'Ajout d\'un article -- nom: ' + nom
-    mycursor = get_db().cursor()
-    tuple_param = (nom, description, prix, photo, stock, type_id, console_id)
     sql = '''
     INSERT INTO jeux_video (nom_jeux_video, description, prix_jeux_video, photo_jeux_video, stock, type_jeux_video_id, console_id)
     VALUES (%s, %s, %s, %s, %s, %s, %s); 
     '''
+
+    tuple_param = (nom, description, prix, photo, stock, type_id, console_id)
     mycursor.execute(sql, tuple_param)
     get_db().commit()
+
+    message = u'jeux vidéo ajouté, nom : ' + nom + ' - type_article : ' + type_id + ' - type_console : ' + console_id + ' - prix : ' + prix + ' - stock : ' + stock + ' - description : ' + description + ' - photo : ' + photo
     flash(message, 'alert-success')
     return redirect('/admin/article/show')
 
@@ -62,7 +64,27 @@ def delete_article():
     sql = '''DELETE FROM jeux_video WHERE id_jeux_video = %s;'''
     mycursor.execute(sql, tuple_param)
     get_db().commit()
-    flash('Suppression d\'un article -- id: ' + str(id_article), 'alert-warning')
+
+    #nb_declinaison = mycursor.fetchone()
+    #if nb_declinaison['nb_declinaison'] > 0:
+    #    message = u'il y a des declinaisons dans cet article : vous ne pouvez pas le supprimer'
+    #    flash(message, 'alert-warning')
+    #else:
+    #    sql = ''' requête admin_article_4 '''
+    #    mycursor.execute(sql, id_article)
+    #    article = mycursor.fetchone()
+    #    print(article)
+    #    image = article['image']
+    #
+    #    sql = ''' requête admin_article_5  '''
+    #    mycursor.execute(sql, id_article)
+    #    get_db().commit()
+    #    if image != None:
+    #        os.remove('static/images/' + image)
+
+    print("un article supprimé, id :", id_article)
+    message = u'un article supprimé, id : ' + id_article
+    flash(message,'alert-success')
     return redirect('/admin/article/show')
 
 
@@ -81,7 +103,19 @@ def edit_article():
     types_article = mycursor.fetchall()
     mycursor.execute("SELECT id_console as id, libelle_console as libelle FROM console;")
     consoles = mycursor.fetchall()
-    return render_template('admin/article/edit_article.html', article=article, types_article=types_article, consoles=consoles)
+
+    # sql = '''
+    # requête admin_article_6
+    # '''
+    # mycursor.execute(sql, id_article)
+    # declinaisons_article = mycursor.fetchall()
+
+    return render_template('admin/article/edit_article.html'
+                           , article=article
+                           , types_article=types_article
+                           , consoles=consoles
+                           #  ,declinaisons_article=declinaisons_article
+                           )
 
 
 @admin_article.route('/admin/article/edit', methods=['POST'])
@@ -95,7 +129,6 @@ def valid_edit_article():
     description = request.form.get('description', '')
     photo = request.form.get('photo', '')
 
-    message = 'Modification d\'un article -- nom: ' + nom
     mycursor = get_db().cursor()
     tuple_param = (nom, description, prix, photo, stock, type_id, console_id, id_article)
     sql = '''
@@ -103,10 +136,17 @@ def valid_edit_article():
     SET nom_jeux_video  = %s, description = %s, prix_jeux_video = %s, photo_jeux_video = %s,stock = %s, type_jeux_video_id = %s, console_id = %s
     WHERE id_jeux_video = %s; 
     '''
+
     mycursor.execute(sql, tuple_param)
     get_db().commit()
+    message = u'jeux vidéo modifié, nom : ' + nom + ' - type_article : ' + type_id + ' - type_console : ' + console_id + ' - prix : ' + prix + ' - stock : ' + stock + ' - description : ' + description + ' - photo : ' + photo
+
     flash(message, 'alert-success')
     return redirect('/admin/article/show')
+
+
+
+
 
 @admin_article.route('/admin/article/avis/<int:id>', methods=['GET'])
 def admin_avis(id):

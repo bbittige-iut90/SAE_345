@@ -78,6 +78,13 @@ def fct_fixtures_load():
     );''')
 
     mycursor.execute('''
+    INSERT INTO etat(id_etat, libelle_etat) VALUES
+    (1, 'En cours de traitement'),
+    (2, 'Expédiée'),
+    (3, 'Validée'),
+    (4, 'Annulée');''')
+
+    mycursor.execute('''
     CREATE TABLE IF NOT EXISTS commande (
         id_commande INT AUTO_INCREMENT,
         date_commande DATE,
@@ -93,6 +100,7 @@ def fct_fixtures_load():
     CREATE TABLE IF NOT EXISTS ligne_commande (
         commande_id INT,
         jeux_video_id INT,
+        prix INT,
         quantite INT,
 
         PRIMARY KEY (commande_id, jeux_video_id),

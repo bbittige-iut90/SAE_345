@@ -94,6 +94,12 @@ CREATE TABLE IF NOT EXISTS ligne_panier (
     FOREIGN KEY (jeux_video_id) REFERENCES jeux_video(id_jeux_video)
 );
 
+INSERT INTO etat(id_etat, libelle_etat) VALUES
+(1, 'En cours de traitement'),
+(2, 'Expédiée'),
+(3, 'Validée'),
+(4, 'Annulée');
+
 
 INSERT INTO utilisateur(id_utilisateur,login,email,password,role,nom,est_actif) VALUES
 (1,'admin','admin@admin.fr',

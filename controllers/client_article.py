@@ -76,6 +76,7 @@ def client_article_show():                                 # remplace client_ind
     mycursor.execute(sql,(id_client,))
     articles_panier = mycursor.fetchall()
 
+    prix_total = 0.0
     if len(articles_panier) >= 1:
         sql = '''
         SELECT SUM(jeux_video.prix_jeux_video * ligne_panier.quantite) AS total
@@ -84,9 +85,8 @@ def client_article_show():                                 # remplace client_ind
         WHERE ligne_panier.utilisateur_id = %s; '''
         mycursor.execute(sql, (id_client,))
         res = mycursor.fetchone()
-        prix_total = res['total']
-    else:
-        prix_total = None
+        if res and res['total'] is not None:
+            prix_total = res['total']
     return render_template('client/boutique/panier_article.html'
                            , articles=articles
                            , articles_panier=articles_panier

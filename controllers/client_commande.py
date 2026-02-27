@@ -102,7 +102,7 @@ def client_commande_show():
     id_commande_show = request.args.get('id_commande', None)
     if id_commande_show:
         sql_articles = """
-            SELECT jv.nom_jeux_video AS nom, lc.quantite, lc.prix
+            SELECT jv.nom_jeux_video AS nom, lc.quantite, lc.prix, (lc.prix * lc.quantite) AS prix_ligne
             FROM ligne_commande AS lc
             JOIN jeux_video AS jv ON lc.jeux_video_id = jv.id_jeux_video
             WHERE lc.commande_id = %s;

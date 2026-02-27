@@ -24,7 +24,7 @@ def show_article():
 @admin_article.route('/admin/article/add', methods=['GET'])
 def add_article():
     mycursor = get_db().cursor()
-    mycursor.execute("SELECT id_type_jeux_video as id_article, libelle_type_jeux_video as libelleType FROM type_jeux_video;")
+    mycursor.execute("SELECT id_type_jeux_video as id_type_article, libelle_type_jeux_video as libelleType FROM type_jeux_video;")
     types_article = mycursor.fetchall()
     mycursor.execute("SELECT id_console as id, libelle_console as libelle FROM console;")
     consoles = mycursor.fetchall()

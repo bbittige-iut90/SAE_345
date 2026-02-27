@@ -27,7 +27,7 @@
                     <select name="type_article_id" required class="form-select">
                         <option value="">Sélectionner un type d'article</option>
                         {% for type in types_article %}
-                             <option value="{{ type.id_type_article }}"> {{ type.libelle }}</option>
+                             <option value="{{ type.id_type_article }}"> {{ type.libelleType }}</option>
                         {% endfor %}
                     </select>
                 </label>
@@ -39,6 +39,10 @@
                              <option value="{{ console.id }}"> {{ console.libelle }}</option>
                         {% endfor %}
                     </select>
+                </label>
+
+                <label for="stock">Stock :
+                    <input name="stock" type="number" class="form-control">
                 </label>
 
                 <label for="description">description :
